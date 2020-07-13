@@ -1,0 +1,115 @@
+{% extends 'basic.html' %}
+{% block title %} سائن اَپ | گنجانک
+{% endblock title %}
+{% block body %}
+<div class="container mt-3 p-3">
+<form action="/signup" method="post" name="signup" id="signup">
+{% csrf_token %}
+  <div class="form-group">
+    <label for="name">نام</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+  <div class="form-group">
+    <label for="email">ای - میل اڈریس</label>
+    <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+    <small id="emailHelp" class="form-text text-muted">ما تئی ای - میل ءَ شئیر نکنیں۔</small>
+  </div>
+  <div class="form-group">
+    <label for="username">یوزرنیم</label>
+    <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" name="username">
+    <small id="usernameHelp" class="form-text text-muted">یوزرنیم ءِ تہا سپیس مان مبی ءُ یوزرنیم الگینے ببیت۔</small>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="password">پاسورڈ</label>
+    <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <div class="col">
+      <label for="confirmpassword">پدا پاسورڈ ءَ بجن۔</label>
+    <input type="password" class="form-control" id="confirmpassword" name="confirmpassword">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-dark mt-3 w-100">سائن اَپ</button>
+</form>
+</div>
+{% endblock body %}
+{% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script>
+   // Wait for the DOM to be ready
+$(function() {
+  $.validator.addMethod(
+    "regex",
+    function(value, element, regexp) {
+        var check = false;
+        return this.optional(element) || regexp.test(value);
+    },
+    "Please provide a valid username."
+);
+  $("form[name='signup']").validate({
+    rules: {
+      name: "required",
+      email: {
+        required: true,
+        email: true,
+        remote: {
+        url: "/checkemail",
+        type: "post",
+        data: {
+          email: function() {
+            return $( "#email" ).val();
+          }
+        }
+      }
+      },
+      username: {
+        required: true,
+        minlength: 5,
+        regex: /^[a-zA-Z0-9]+$/,
+        remote: {
+        url: "/checkusername",
+        type: "post",
+        data: {
+          username: function() {
+            return $( "#username" ).val();
+          }
+        }
+      }
+      },
+      password: {
+        required: true,
+        minlength: 8
+      },
+      confirmpassword: {
+          equalTo: "#password"
+      }
+    },
+    // Specify validation error messages
+    messages: {
+      name: "enter a name",
+      password: {
+        required: "Please provide a password",
+        minlength: "Your password must be at least 8 characters long"
+      },
+      confirmpassword: {
+        equalTo: "password does not match"
+      },
+      email: {
+        required: "enter a email address",
+        email: "Please enter a valid email address",
+        remote: "email already exists",
+        regex : "nonn"
+      },
+      username: {
+        required: "enter a username",
+        minlength: "Your password must be at least 5 characters long",
+        remote: "username already exists"
+      }
+    },
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+});
+</script>
+{% endblock js %}

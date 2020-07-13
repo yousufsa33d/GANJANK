@@ -1,0 +1,97 @@
+{% extends 'basic.html' %}
+{% block title %}{{article.title}} | گنجانک{% endblock title %}
+{% block body %}
+{% block head %}
+{% if user.is_authenticated %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+    tinymce.init({
+        {% load static %}
+        selector: '#article',
+        content_css : "{% static 'dist/css/bootstrap-rtl.min.css' %},{% static 'demo/custom.min.css' %}, {% static 'dist/css/docs.min.css' %}, {% static 'font/font.css' %}" 
+    });
+</script>
+{% endif %}
+{% endblock head %}
+{% load extras %}
+<div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+        <main class="col-12 py-sm-3 px-lg-3 bd-content" role="main">
+            {% if user.is_authenticated %}
+            <div id="article">
+                <h2 id="article{{article.Id}}" class="m-2 bd-title">{{article.title}}</h2>
+                <p class="m-2">
+                    {{article.content|striptags}}
+                </p>
+                <div id="table" class="container">
+                </div>
+                {% for heading in headings %}
+                <h3 id="heading{{heading.id}}" class="mt-2">
+                    {{heading.title}}</h3>
+                <p class="m-2">
+                    {{heading.content|striptags}}
+                </p>
+                {% for subheading in subheadings|get_val:heading.id %}
+                <h5 id="subheading{{subheading.id}}" class="mt-2">{{subheading.title}}</h5>
+                <p class="m-2">
+                    {{subheading.content|striptags}}
+                </p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+
+            <form id="submitchanges" method="post" action="#">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-dark my-2 w-100">Save Changes</button>
+            </form>
+            {% else %}
+            <p>آرٹیکل رد ءُ بدل کنگ واستہ لوگ اِن کنگ لازم اَنت۔</p>
+            {% endif %}
+            <footer class="text-center border-top mt-2" style="font-family: sans-serif;">
+                <p style="direction: ltr; font-weight: bold; ">&copy; 2020 by Ganjank Organization
+                <p>
+                    <a href="#article{{ article.Id }}">Back to top</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+    scriptTinyMCE = document.getElementsByTagName("script")[0];
+    var old = document.getElementById('article').innerHTML
+    $(document).ready(function () {
+
+    });
+    $('#submitchanges').submit(function (event) {
+        event.preventDefault();
+
+        let changes = tinyMCE.get('article').getContent()
+        var formData = {
+            'changes': changes,
+            'old': old,
+            'articleId': {{ article.Id }},
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/article/article_edit',
+        data: formData,
+        encode: true
+    })
+        .done(function (data) {
+            console.log(data)
+            if (data == 'Done') {
+                window.location = "/article/{{article.slug}}";
+            }
+            else {
+                alert('something went wrong. Try again');
+
+            }
+        })
+})
+</script>
+{% endblock js %}

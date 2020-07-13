@@ -1,0 +1,43 @@
+{% load extras %}
+        <main role="main">
+            <h3 id="article{{article.Id}}" class="m-2">{{article.title}}
+            </h3>
+            <div class="border m-2"></div>
+            {% if article.image_title and article.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{article.image}}" class="img-fluid">
+                <p class="text-center">{{article.image_title}}</p>
+            </div>
+            {% endif %}
+            <p class="m-2 text-justify">
+                {{article.content|add_link:article|safe}}
+            </p>
+            <div id="table" class="container">
+            </div>
+            {% for heading in headings %}
+            <h4 id="heading{{heading.id}}" class="mt-2">
+                {{heading.title}}</h4>
+            {% if heading.image_title and heading.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{heading.image}}" class="img-fluid">
+                <p class="text-center">{{heading.image_title}}</p>
+            </div>
+            {% endif %}
+            <div class="border"></div>
+            <p class="m-2 text-justify">
+                {{heading.content|add_link:article|safe}}
+            </p>
+            {% for subheading in subheadings|get_val:heading.id %}
+            <h5 id="subheading{{subheading.id}}" class="mt-2">{{subheading.title}}</h5>
+            {% if subheading.image_title and subheading.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{subheading.image}}" class="img-fluid">
+                <p class="text-center">{{subheading.image_title}}</p>
+            </div>
+            {% endif %}
+            <p class="m-2 text-justify">
+                {{subheading.content|add_link:article|safe}}
+            </p>
+            {% endfor %}
+            {% endfor %}
+        </main>

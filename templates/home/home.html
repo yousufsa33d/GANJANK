@@ -1,0 +1,189 @@
+{% extends 'basic.html' %}
+{% block homeactive %}active
+{% endblock homeactive %}
+{% block title %}اولی تاک | گنجانک{% endblock title %}
+{% block body %}
+{% load extras %}
+
+<main class="py-3" role="main">
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid  text-dark">
+            <div class="container">
+                <h1 class="display-5 text-center"><strong>گنجانک</strong> تاھا وش اتکے۔</h1>
+                <p class="lead text-center mt-3">{{no_of_articles}} آرٹیکل پہ وانگ ءَ شمارہ دست کپیت۔</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row mb-2">
+        {% if todayPictureArticle %}
+            <div class="col-lg-6">
+            {% else %}
+            <div class="col-lg-12">
+        {% endif %}
+                <div class="row no-gutters overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+                    <div
+                        class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-primary">مرچیگیں کاسیں آرٹیکل</strong>
+                            <h3 class="mb-0"> {{mainArticle.title}}</h3>
+
+                            <div>
+                                {% if mainArticle.image %}
+                                <img src="/media/{{mainArticle.image}}" class="img-fluid float-left ml-2"
+                                    style="width: 50%;">
+                                {% endif %}
+                                {% if todayPictureArticle %}
+                                <p class="text-justify">{{mainArticle.content|striptags|truncatechars:500}}</p>
+                                {% else %}
+                                <p class="text-justify">{{mainArticle.content|striptags|truncatechars:800}}</p>
+                                {% endif %}
+                                <a href="/article/{{mainArticle.slug}}" class="stretched-link">دیم ءَ بوان۔۔۔</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if todayItems %}
+                    <div
+                        class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative w-100">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-primary">مروچیگیں روچ ءَ </strong>
+                            <ul>
+                                {% for todayItem in todayItems %}
+                                <li>
+                                    {{todayItem.todayItem|add_article_link:mainArticle|safe}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="row no-gutters overflow-hidden flex-md-row h-md-250 position-relative">
+                    {% if todayPictureArticle %}
+                    <div
+                        class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-success"> مرچیگیں کاسیں عکس</strong>
+                            <h3 class="mb-0"> {{todayPictureArticle.title}}</h3>
+                            <div>
+                                {% if todayPictureArticle.image %}
+                                <img src="/media/{{todayPictureArticle.image}}" class="img-fluid float-left ml-2"
+                                    style="width: 50%;">
+                                {% endif %}
+                                <p class="card-text mb-auto text-justify">
+                                    {{todayPictureArticle.content|striptags|truncatechars:500}}</p>
+                                <a href="/article/{{todayPictureArticle.slug}}" class="stretched-link">دیم ءَ
+                                    بوان۔۔۔</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if doYouKnows %}
+                    <div
+                        class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative w-100">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <strong class="d-inline-block mb-2 text-success">تو زانے</strong>
+                            <ul>
+                                {% for doYouKnow in doYouKnows %}
+                                <li>
+                                    {{doYouKnow.doYouKnowItem|add_article_link:mainArticle|safe}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container">
+        <div class="border rounded p-3">
+        <h6 class="m-2">آرٹیکل آبانی ردا</h6>
+            <h4 class="d-inline m-2"><a href="/article?sort=ا" > ا </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ب" > ب </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=پ" > پ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ت" > ت </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ٹ" > ٹ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ج" > ج </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=چ" > چ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=د" > د </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ڈ" > ڈ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ر" > ر </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ڑ" > ڑ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ژ" > ژ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ز" > ز </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ژ" > ژ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=س" > س </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ش" > ش </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ک" > ک </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=گ" > گ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ل" > ل </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=م" > م </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ن" > ن </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=و" > و </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ہ" > ہ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ھ" > ھ </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ی" > ی </a></h4>
+            <h4 class="d-inline m-2"><a href="/article?sort=ے" > ے </a></h4>
+        <h6 class="m-2">گیشیں آب</h6>
+        </div>
+    </div>
+</main>
+<footer class="text-center border-top" style="font-family: sans-serif;">
+    <p style="direction: ltr; font-weight: bold; ">&copy; 2020 by Ganjank Organization
+    <p>
+        <a href="#">Back to top</a>
+    </p>
+</footer>
+
+<div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="articleModalLabel">title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <a type="button" id="article_link" href="#" class="btn btn-dark">Visit</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+$(function() {
+    $('#articleModal').on('show.bs.modal', function (event) {
+        var a = $(event.relatedTarget) // Button that triggered the modal
+        var article = a.data('article') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        $.get('/article/modal_article', { article: article }, function (data, textStatus, jqXHR) {
+        let articledata = jQuery.parseJSON(data)
+        let link = '/article/' + article;
+        modal.find('.modal-body').html(articledata['articleData'])
+        modal.find('.modal-title').text(articledata['articleTitle'])
+        modal.find('#article_link').attr('href',link)
+        });
+    })
+    $("#article_link").click(function(){
+        href = $(this).attr('href');
+        window.location.href= href
+});
+});
+</script>
+{% endblock js %}

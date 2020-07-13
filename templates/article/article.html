@@ -1,0 +1,153 @@
+{% extends 'basic.html' %}
+{% block title %}{{article.title}} | گنجانک{% endblock title %}
+{% block head %}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+{% endblock head %}
+{% block css %}
+.edit {
+    height: 60px;
+    width: 60px;
+}
+{% endblock css %}
+{% block body %}
+{% load extras %}
+<div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+        <nav class="d-none d-lg-block col-lg-3 bd-toc border-0" aria-label="Secondary navigation">
+            <ul class="section-nav">
+                <h5 class="toc-entry toc-h3"><a href="#article{{ article.Id }}">{{article.title}}</a></h5>
+                {% for heading in headings %}
+                <li class="toc-entry toc-h2"><a href="#heading{{heading.id}}">{{heading.title}}</a>
+                    {% for subheading in subheadings|get_val:heading.id %}
+                    <ul>
+                        <li class="toc-entry toc-h3"><a href="#subheading{{subheading.id}}">{{subheading.title}}</a>
+                        </li>
+                    </ul>
+                    {% endfor %}
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <main class="col-lg-9 py-sm-3 px-lg-3 bd-content" role="main">
+            <h2 id="article{{article.Id}}" class="m-2 bd-title">{{article.title}}
+            </h2>
+            <div class="border m-2"></div>
+            {% if article.image_title and article.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{article.image}}" class="img-fluid">
+                <p class="text-center">{{article.image_title}}</p>
+            </div>
+            {% endif %}
+            <p class="m-2 text-justify">
+                {{article.content|add_article_link:article|safe}}
+            </p>
+            <div id="table" class="container">
+            </div>
+            {% for heading in headings %}
+            <h3 id="heading{{heading.id}}" class="mt-2">
+                {{heading.title}}</h3>
+            {% if heading.image_title and heading.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{heading.image}}" class="img-fluid">
+                <p class="text-center">{{heading.image_title}}</p>
+            </div>
+            {% endif %}
+            <div class="border"></div>
+            <p class="m-2 text-justify">
+                {{heading.content|add_article_link:article|safe}}
+            </p>
+            {% for subheading in subheadings|get_val:heading.id %}
+            <h3 id="subheading{{subheading.id}}" class="mt-2">{{subheading.title}}</h3>
+            {% if subheading.image_title and subheading.image %}
+            <div class="border w-50 float-left m-2">
+                <img src="/media/{{subheading.image}}" class="img-fluid">
+                <p class="text-center">{{subheading.image_title}}</p>
+            </div>
+            {% endif %}
+            <p class="m-2 text-justify">
+                {{subheading.content|add_article_link:article|safe}}
+            </p>
+            {% endfor %}
+            {% endfor %}
+            <!-- footer here -->
+            <div class="border"></div>
+            <p> لکوک: {{article.author}} </p>
+
+            {% if user.is_authenticated %}
+            <div class="border"></div>
+            <form method="post" action="/article/getfeedback">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="feedback">تئی ھیال آرٹیکل بابتہ۔</label>
+                    <textarea class="form-control" id="feedback" name="feedback" rows="3"></textarea>
+                    <input type="hidden" value="{{article.Id}}" name="articleId">
+                    <input type="hidden" value="{{article.slug}}" name="articleSlug">
+                </div>
+                <button type="submit" class="btn btn-dark">دیم دئے</button>
+            </form>
+            {% endif %}
+            <footer class="text-center border-top mt-2" style="font-family: sans-serif;">
+                <p style="direction: ltr; font-weight: bold; ">&copy; 2020 by Ganjank Organization
+                <p>
+                    <a href="#article{{ article.Id }}">Back to top</a>
+                </p>
+            </footer>
+        </main>
+
+        {% comment %} edit link {% endcomment %}
+        {% if user.is_authenticated %}
+        <div class="fixed-bottom ml-3 mb-lg-5 mb-4">
+            <a href="/article/{{article.slug}}?action=edit" class="rounded-circle border bg-light p-3 d-inline-block edit">
+                <span class="material-icons">edit</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="modal fade" id="articleModal" tabindex="-1" role="dialog" aria-labelledby="articleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="articleModalLabel">title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <a type="button" id="article_link" href="#" class="btn btn-dark">Visit</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+$(function() {
+    $('#articleModal').on('show.bs.modal', function (event) {
+        var a = $(event.relatedTarget) // Button that triggered the modal
+        var article = a.data('article') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        $.get('/article/modal_article', { article: article }, function (data, textStatus, jqXHR) {
+        let articledata = jQuery.parseJSON(data)
+        let link = '/article/' + article;
+        modal.find('.modal-body').html(articledata['articleData'])
+        modal.find('.modal-title').text(articledata['articleTitle'])
+        modal.find('#article_link').attr('href',link)
+        });
+    })
+    $("#article_link").click(function(){
+        href = $(this).attr('href');
+        window.location.href= href
+});
+});
+</script>
+{% endblock js %}

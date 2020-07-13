@@ -1,0 +1,26 @@
+{% extends 'basic.html' %}
+{% block body %}
+<div class="container">
+    <h2 class="m-3">سرچ رزلٹ:</h2>
+    {% if noresult %}
+    <p>ہچ وڈیں سرچ رزلٹ نیست۔</p>
+    <p>پدا کوشش کن۔</p>
+    {% endif %}
+    {% for article in articles %}
+    {% comment %} <div class="rounded border p-3 m-3 no-gutters row no-gutters border rounded overflow-hidden">
+    <h4><a href="/article/{{article.slug}}" class="stretched-link">{{article.title}}</a></h4>
+    <p class="text-justify">{{ article.content|truncatechars:500|striptags }}</p>
+    </div> {% endcomment %}
+                        <div
+                            class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <h4><a href="/article/{{article.slug}}" class="stretched-link">{{article.title}}</a></h4>
+                                <div>
+                                    <p class="text-justify">{{article.content|truncatechars:500|striptags}}</p>
+                                </div>
+                                {% comment %} <p class="text-justify">{{ article.content|truncatechars:500|striptags }}</p> {% endcomment %}
+                            </div>
+                        </div>
+    {% endfor %}
+</div>
+{% endblock body %}

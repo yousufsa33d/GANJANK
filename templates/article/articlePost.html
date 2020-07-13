@@ -1,0 +1,116 @@
+{% extends 'basic.html' %}
+{% block title %} پوسٹ آرٹیکل | گنجانک{% endblock title %}
+{% block articlepostactive %}active{% endblock articlepostactive %}
+{% block head %}
+{% if user.is_authenticated %}
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+<script>
+    tinymce.init({
+        {% load static %}
+        selector: '#article',
+        height: 600,
+        content_css : "{% static 'dist/css/bootstrap-rtl.min.css' %},{% static 'demo/custom.min.css' %}, {% static 'dist/css/docs.min.css' %}, {% static 'font/font.css' %}" 
+    });
+</script>
+{% endif %}
+{% endblock head %}
+{% block body %}
+{% load extras %}
+<div class="container-fluid">
+    <div class="row flex-xl-nowrap">
+        <main class="col-12 py-sm-3 px-lg-3 bd-content" role="main">
+            {% if user.is_authenticated %}
+            <form id="submitchanges" method="post" action="/article/article_post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="post" id="post">
+                <div>
+                    <ul>
+                        <li>
+                            چار پوٹو جال داتگیں جاھاں پر کنگ اجازت اَست۔ اگاں گیشیں پوٹو ئے است گڈا مارا گوں رابطہ بکن
+                            اِت۔
+                        </li>
+                        <li>
+                            ہرچ آرٹیکل اپروو بیگ ءَ رند ویبسائٹ ءَ پیش دارگ بیت۔
+                        </li>
+                        <li>
+                            پہ گیشیں مالومات واستہ مارا گوں رابطہ ات۔
+                            ganjankTeam@gmail.com
+                        </li>
+                    </ul>
+
+                </div>
+                <input type="text" class="form-control my-2" id="image_title" name="title" id="title"
+                    placeholder="آرٹیکل ءِ سرھال (Article Title)" required>
+                <textarea id="article">
+                <div class="m-3"></div>
+            </textarea>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <input type="text" class="form-control" id="image_title1" name="image_title1"
+                            placeholder="پوٹو ءِ سرھال (Image Title)">
+                    </div>
+                    <div class="col">
+                        <input type="file" id="image1" name="image1" accept="image/*">
+
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <input type="text" class="form-control" id="image_title2" name="image_title2"
+                            placeholder="پوٹو ءِ سرھال (Image Title)">
+                    </div>
+                    <div class="col">
+                        <input type="file" id="image2" name="image2" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <input type="text" class="form-control" id="image_title3" name="image_title3"
+                            placeholder="پوٹو ءِ سرھال (Image Title)">
+                    </div>
+                    <div class="col">
+                        <input type="file" id="image3" name="image3" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <input type="text" class="form-control" id="image_title4" name="image_title4"
+                            placeholder="پوٹو ءِ سرھال (Image Title)">
+                    </div>
+                    <div class="col">
+                        <input type="file" id="image4" name="image4" accept="image/*">
+
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn btn-dark my-2 w-100">پوسٹ آرٹیکل</button>
+            </form>
+            {% else %}
+            <p>آرٹیکل لکگ واستہ لوگ اِن کنگ لازم اَنت۔</p>
+            {% endif %}
+            <footer class="text-center border-top mt-2" style="font-family: sans-serif;">
+                <p style="direction: ltr; font-weight: bold; ">&copy; 2020 by Ganjank Organization
+                <p>
+                    <a href="#article{{ article.Id }}">Back to top</a>
+                </p>
+            </footer>
+        </main>
+    </div>
+</div>
+{% endblock body %}
+{% block js %}
+<script>
+    $(document).ready(function () {
+        $('#submitchanges').submit(function (event) {
+            let post = tinyMCE.get('article').getContent()
+            $('#post').val(post)
+        });
+    });
+</script>
+{% endblock js %}
