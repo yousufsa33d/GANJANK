@@ -9,6 +9,7 @@
     tinymce.init({
         {% load static %}
         selector: '#article',
+	height: 600,
         content_css : "{% static 'dist/css/bootstrap-rtl.min.css' %},{% static 'demo/custom.min.css' %}, {% static 'dist/css/docs.min.css' %}, {% static 'font/font.css' %}" 
     });
 </script>
