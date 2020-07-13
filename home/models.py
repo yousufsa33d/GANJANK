@@ -5,7 +5,7 @@ from article.models import Article
 class Contact(models.Model):
     sno = models.AutoField(primary_key = True)
     name = models.CharField(max_length=50)
-    phone = models.CharField(max_length=14)
+    phone = models.CharField(max_length=255)
     email = models.CharField(max_length=50)
     message = models.TextField()
     timeStamp = models.DateTimeField(default=now)
