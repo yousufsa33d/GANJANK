@@ -40,6 +40,7 @@ def home(request):
                     'mainArticle': mainArticle
         }
         return render(request, 'home/home.html', context)
+        return render(request, 'home/home.html')
     # today = date.today()
     # invoice_for_today = Invoice.objects.filter(date__year=today.year, date__month=today.month, date__day=today.day)
 

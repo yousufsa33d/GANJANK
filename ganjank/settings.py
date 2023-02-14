@@ -25,10 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'r+t^cu2*-csz64wp&sxym34@c))4)dg@xi9p*fw=gjemu6a=ec')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
-ALLOWED_HOSTS = ['ganjank.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
